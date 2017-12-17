@@ -1,5 +1,4 @@
-var container = document.getElementsByClassName('container')[0]; 
-// var body = document.getElementsByTagName('body')[0];
+var container = document.getElementsByClassName('container')[0];
 var width = container.appendChild(document.createElement('input'));
 var height = container.appendChild(document.createElement('input'));
 var button = container.appendChild(document.createElement('button'));
@@ -14,7 +13,6 @@ var info = document.createElement('div');
 info.className = 'info';
 
 
-
 button.innerText = 'Create game';
 button.addEventListener('click', showTable);
 table.addEventListener('click', showNumber);
@@ -27,7 +25,11 @@ function showTable() {
         table.appendChild(tr);
         for (let i = 0; i < width.value; i++) {
             let td = document.createElement('td');
-            tr.appendChild(td);
+            td.className = 'td';
+            let span = document.createElement('span');            
+            span.className = 'wrap';
+            td.appendChild(span);
+            tr.appendChild(td);               
         }
     }
 
@@ -59,7 +61,7 @@ function setNumbers(){
     for(let i = 0; i < tdAll.length; i++) {
         let rand = Math.floor(Math.random() * doubleNumb.length);       
         obj[i] = doubleNumb[rand];
-        tdAll[i].innerHTML = obj[i];
+        tdAll[i].childNodes[0].innerHTML = obj[i];
         doubleNumb.splice(rand,1);        
     }
     
@@ -68,34 +70,39 @@ function setNumbers(){
 
 // скрывает номера
 function hide(){
-    for(let i = 0; i < tdAll.length; i++){
-        tdAll[i].style.color = 'transparent';        
+    for(let i = 0; i < tdAll.length; i++){       
+        tdAll[i].childNodes[0].style.display = 'none'
     } 
 }
 
 // показывает цифры при клике
-function showNumber() {   
-    event.target.style.color = 'black';
-    addToCheck(event.target);
+function showNumber() {
+    
+    if (event.target.className == 'td' ){       
+        event.target.childNodes[0].style.display = 'block';
+        addToCheck(event.target.childNodes[0]);
+    }
+    
     
 }
 
 // проверка цифр попарно
 function addToCheck(elem){
+    
     if (arrCheck.length < 2) {
-        // проверка, чтоб при нажатии дважды на одну и туже ячейку не было GREAT.
-        // надо подумать, чтоб не проверяло уже открытые ячейки 
+        // проверка, чтоб при нажатии дважды на одну и туже ячейку не было GREAT.         
         if (arrCheck[0] !== elem){
             arrCheck.push(elem);
         }        
     }
 
-    if (arrCheck.length == 2) {
+    if (arrCheck.length == 2) {        
         if(arrCheck[0].innerText == arrCheck[1].innerText){
-            console.log('GREAT');
+
+            console.log('GREAT');            
             info.innerText = 'Match';
-            arrCheck[0].className = 'opened';
-            arrCheck[1].className = 'opened';            
+            arrCheck[0].parentElement.className = 'opened';
+            arrCheck[1].parentElement.className = 'opened';        
             arrCheck.splice(0,2);
         } else {
             console.log('false');
@@ -108,12 +115,8 @@ function addToCheck(elem){
 }
 function hidePart(){
     for(let i = 0; i < tdAll.length; i++){
-        if (tdAll[i].className != 'opened'){
-            tdAll[i].style.color = 'transparent'; 
+        if (tdAll[i].className != 'opened'){            
+            tdAll[i].childNodes[0].style.display = 'none'
         } 
     }
 }
-
-
-// в массив не только 2 шт, а все, что успел открыть полльзователь, и там сравнивать попарно....может быть
-
